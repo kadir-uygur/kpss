@@ -1,9 +1,12 @@
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import requests
 from bs4 import BeautifulSoup
+
+# Türkiye Saat Dilimi (UTC+3)
+TR_TZ = timezone(timedelta(hours=3))
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -17,17 +20,19 @@ TIMEOUT = (3.0, 5.0)
 SPOR_KEYWORDS = [
     "beden eğitimi", "besyo", "spor bilimleri", "spor uzmanı", 
     "antrenör", "rekreasyon", "egzersiz", "cankurtaran", "can kurtaran", 
-    "gençlik ve spor", "yurt yönetim", "öğretmen subay", "gençlik lideri", "yurt yönetim", "spor masörü", "tenis antrenör", "kickboks antrenör"
+    "gençlik ve spor", "yurt yönetim", "öğretmen subay", "gençlik lideri", 
+    "spor masörü", "tenis antrenör", "kickboks antrenör"
 ]
 
 GENEL_KEYWORDS = [
     "4001", "herhangi bir lisans", "tüm lisans", "zabıta", "itfaiye", 
     "büro personeli", "subay", "astsubay", "jandarma", "sahil güvenlik", 
-    "araştırma görevlisi", "öğretim görevlisi", "infaz ve koruma", "gardiyan", "pomem", "polis", "gümrük muhafaza", "bekçi"
+    "araştırma görevlisi", "öğretim görevlisi", "infaz ve koruma", "gardiyan", 
+    "pomem", "polis", "gümrük muhafaza", "bekçi"
 ]
 
 def log(msg):
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
+    print(f"[{datetime.now(TR_TZ).strftime('%H:%M:%S')}] {msg}", flush=True)
 
 def get_category(title, source):
     t = title.lower()
@@ -58,7 +63,7 @@ def fetch_ads(url, link_filter, source_name, is_relative=True, base_url=""):
                             "link": full_url,
                             "source": source_name,
                             "category": cat,
-                            "date": datetime.now().strftime("%d.%m.%Y")
+                            "date": datetime.now(TR_TZ).strftime("%d.%m.%Y")
                         })
             log(f"-> {source_name} tamamlandı ({len(ads)} uygun ilan)")
     except Exception:
@@ -120,7 +125,6 @@ def main():
         "https://www.malatya.bel.tr/duyurular", 
         "duyuru", "Malatya Bel", base_url="https://www.malatya.bel.tr"
     )
-    
 
     # Tekrarlayan bağlantıları temizle (Duplicate engelleme)
     unique_ads = {}
@@ -129,7 +133,7 @@ def main():
             unique_ads[ad["link"]] = ad
 
     output = {
-        "last_updated": datetime.now().strftime("%d.%m.%Y %H:%M"),
+        "last_updated": datetime.now(TR_TZ).strftime("%d.%m.%Y %H:%M"),
         "total_count": len(unique_ads),
         "ilanlar": list(unique_ads.values())
     }
