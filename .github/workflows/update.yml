@@ -1,0 +1,36 @@
+name: Sayfa ve Ilan Guncelleme
+
+on:
+  schedule:
+    # Her 3 saatte bir otomatik güncelleme
+    - cron: '0 */3 * * *'
+  workflow_dispatch: # Tek tıkla manuel tetikleme imkanı
+  push:
+    branches: [ main ]
+
+jobs:
+  scrape-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Kütüphaneleri Yükle
+        run: pip install requests beautifulsoup4
+
+      - name: Tarayıcıyı Çalıştır
+        run: python scraper.py
+
+      - name: Değişiklikleri Kaydet ve Yayınla
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add ilanlar.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Otomatik ilan güncellemesi" && git push)
