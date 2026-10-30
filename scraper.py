@@ -17,13 +17,13 @@ TIMEOUT = (3.0, 5.0)
 SPOR_KEYWORDS = [
     "beden eğitimi", "besyo", "spor bilimleri", "spor uzmanı", 
     "antrenör", "rekreasyon", "egzersiz", "cankurtaran", "can kurtaran", 
-    "gençlik ve spor", "yurt yönetim", "öğretmen subay"
+    "gençlik ve spor", "yurt yönetim", "öğretmen subay", "gençlik lideri", "yurt yönetim", "spor masörü", "tenis antrenör", "kickboks antrenör"
 ]
 
 GENEL_KEYWORDS = [
     "4001", "herhangi bir lisans", "tüm lisans", "zabıta", "itfaiye", 
     "büro personeli", "subay", "astsubay", "jandarma", "sahil güvenlik", 
-    "araştırma görevlisi", "öğretim görevlisi"
+    "araştırma görevlisi", "öğretim görevlisi", "infaz ve koruma", "gardiyan", "pomem", "polis", "gümrük muhafaza", "bekçi"
 ]
 
 def log(msg):
@@ -120,11 +120,7 @@ def main():
         "https://www.malatya.bel.tr/duyurular", 
         "duyuru", "Malatya Bel", base_url="https://www.malatya.bel.tr"
     )
-    # 7. Kişisel Test Blogu (MentalityMan)
-    raw_ads += fetch_ads(
-        "https://mentalityman.blogspot.com/", 
-        ".html", "MentalityMan", is_relative=True, base_url="https://mentalityman.blogspot.com"
-    )
+    
 
     # Tekrarlayan bağlantıları temizle (Duplicate engelleme)
     unique_ads = {}
