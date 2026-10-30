@@ -120,6 +120,11 @@ def main():
         "https://www.malatya.bel.tr/duyurular", 
         "duyuru", "Malatya Bel", base_url="https://www.malatya.bel.tr"
     )
+    # 7. Kişisel Test Blogu (MentalityMan)
+    raw_ads += fetch_ads(
+        "https://mentalityman.blogspot.com/", 
+        ".html", "MentalityMan", is_relative=True, base_url="https://mentalityman.blogspot.com"
+    )
 
     # Tekrarlayan bağlantıları temizle (Duplicate engelleme)
     unique_ads = {}
